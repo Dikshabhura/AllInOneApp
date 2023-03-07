@@ -1,0 +1,41 @@
+﻿<Page
+    x:Class="AllInOneApp.Views.EmailView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AllInOneApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Width="300" BorderThickness="2" Orientation="Vertical" Grid.Column="0" >
+            <ListView ItemsSource="{x:Bind myEmails}" SelectionChanged="ListView_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="from" Text="{Binding from}"/>
+                            <TextBlock x:Name="subject" Text="{Binding subject}" Grid.Row="1" Foreground="{Binding subjectColor}"/>
+                            <RichTextBlock x:Name="body" TextWrapping="Wrap" Grid.Row="2" >
+                                <Paragraph>{Binding body}</Paragraph>
+                            </RichTextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                
+            </ListView>
+        </StackPanel>
+        <StackPanel Grid.Column="1" >
+            <Frame x:Name="EmailContent" />
+        </StackPanel>
+    </Grid>
+</Page>

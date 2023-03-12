@@ -18,6 +18,10 @@ using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using System.Collections.ObjectModel;
 using AllInOneApp.Models;
+using System.Threading.Tasks;
+using Task = AllInOneApp.Models.Task;
+using TaskStatus = Microsoft.Graph.Models.TaskStatus;
+using AllInOneApp.Helper;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,8 +32,10 @@ namespace AllInOneApp.Views
     /// </summary>
     public sealed partial class ToDoListView : Page
     {
+        DateTimeConversion dateTimeConversion = new DateTimeConversion();
         private GraphServiceClient gc;
-        private string listId = "AAMkADAwYzExZjBjLTAxY2QtNDc5OC1iNWI3LTAxZTg1MGNmMGY2ZgAuAAAAAAAVpdoKmHXYQr8TZqNt7h4QAQAHs8eE9g4dT4ytMjsDuRdFAAAAAAESAAA=";
+        private string listId = string.Empty;
+        //private string listId = "AAMkADAwYzExZjBjLTAxY2QtNDc5OC1iNWI3LTAxZTg1MGNmMGY2ZgAuAAAAAAAVpdoKmHXYQr8TZqNt7h4QAQAHs8eE9g4dT4ytMjsDuRdFAAAAAAESAAA=";
         public ObservableCollection<Task> myTasks = new ObservableCollection<Task>();
         Symbol taskPriority;
         public ToDoListView()
@@ -38,20 +44,41 @@ namespace AllInOneApp.Views
 
             // Get the Graph client from MainPage;
             gc = MainPage.graphClient;
-
+            //GetToDoTaskListId();
             GetMyTasks();
             //AddTask();
+        }
+
+        private async Task<string> GetToDoTaskListId()
+        {
+            string taskListId = string.Empty;
+            try
+            {
+                
+                var todoList = await gc.Me.Todo.Lists.GetAsync();
+
+                taskListId = todoList.Value.First(l => l.DisplayName == "Tasks").Id;
+
+                //return taskListId;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return taskListId;
         }
 
         private async void GetMyTasks()
         {
             try
             {
+                listId = await GetToDoTaskListId();
+
                 var mytodolist = await gc.Me.Todo.Lists[listId].Tasks.GetAsync();
 
                 //Show only Not started or Incomplete task.
-                if(mytodolist != null || mytodolist.Value.Count > 0) {
-                    for (int index = 0; index <= mytodolist.Value.Count; index++)
+                if(mytodolist.Value != null || mytodolist.Value.Count > 0) {
+                    for (int index = 0; index < mytodolist.Value.Count; index++)
                     {
                         var currTask = mytodolist.Value[index];
                         if (currTask.Status != TaskStatus.Completed)
@@ -61,7 +88,7 @@ namespace AllInOneApp.Views
                                 Title = currTask.Title,
                                 Id = currTask.Id,
                                 Importance = currTask.Importance,
-                                DueDateTime = currTask.DueDateTime!= null ? currTask.DueDateTime.ToString(): null,
+                                DueDateTime = currTask.DueDateTime,
                                 TaskPriority = currTask.Importance == Importance.High ? Symbol.Pin : Symbol.UnPin,
                             });
                         }
@@ -75,26 +102,39 @@ namespace AllInOneApp.Views
             }
         }
 
-        private void AddTask(object sender, RoutedEventArgs e)
+        private async void AddTask(object sender, RoutedEventArgs e)
         {
             try
             {
-                string taskTitle = this.AddTaskTitle.Text;
-                //var date = new DateTime(
-                DateTimeOffset taskDate = (DateTimeOffset)this.taskDueDate.Date;
-                
 
-                DateTimeTimeZone dt = new DateTimeTimeZone();
-                //dt.DateTime = new DateTime(
-                
+                //string taskTitle = this.AddTaskTitle.Text;
+                //var retrievedDate = taskDueDate.Date;
+                //DateTime dateTime = retrievedDate.Value.DateTime;
+                //string date = dateTime.ToString("yyyy-MM-dd");
+                //string time = dateTime.ToString("hh:mm:ss");
+                //var formatedtime = date + "T" + time;
+                //System.Diagnostics.Debug.WriteLine(formatedtime);
 
                 var reqBody = new TodoTask
                 {
-                    Title = taskTitle,
-                    //DueDateTime = 
+                    Title = this.AddTaskTitle.Text,
+                    DueDateTime = new DateTimeTimeZone
+                    {
+                        DateTime = dateTimeConversion.DateTimeConverter(taskDueDate.Date.Value),
+                        TimeZone = "Eastern Standard Time"
+                    },
                 };
 
-                var result = gc.Me.Todo.Lists[listId].Tasks.PostAsync(reqBody);
+                var result = await gc.Me.Todo.Lists[listId].Tasks.PostAsync(reqBody);
+
+                myTasks.Add(new Task
+                {
+                    Title = result.Title,
+                    Id = result.Id,
+                    Importance = result.Importance,
+                    DueDateTime = result.DueDateTime,
+                    TaskPriority = result.Importance == Importance.High ? Symbol.Pin : Symbol.UnPin,
+                });
 
                 Console.WriteLine(result);
             }

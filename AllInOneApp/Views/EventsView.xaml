@@ -9,7 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <ListView ItemsSource="{x:Bind myEvents}">
+        
+        <ListView ItemsSource="{x:Bind myEvents}" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -28,5 +29,37 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button x:Name="btnAddNewEvent" Content="Add New Event" >
+            <Button.Flyout >
+                <Flyout >
+                    <Grid Height="500">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="eventTitle" PlaceholderText="Event Title" Header="Title" Grid.Row="0"/>
+                        <TextBox x:Name="eventAttendee" PlaceholderText="Enter one or more attendee/s email with ; seperator" Header="Event Attendees" Grid.Row="1"/>
+                        <StackPanel Grid.Row="2">
+                            <CalendarDatePicker x:Name="eventStartDate" DateFormat="{}{year.full}-{month.integer}-{day.integer}"/>
+                            <!--<ToggleButton x:Name="isAllDayEvent" Content="All Day" />-->
+                            <TimePicker x:Name="eventStartTime" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3">
+                            <CalendarDatePicker x:Name="eventEndDate" Grid.Column="0"/>
+                            <TimePicker x:Name="eventEndTime" Grid.Column="1"/>
+                        </StackPanel>
+                        <Button x:Name="eventSave" Content="Save" Grid.Row="4" Click="AddNewEvent"/>
+                    </Grid>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
     </Grid>
 </Page>

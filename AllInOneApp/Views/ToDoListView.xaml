@@ -4,10 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AllInOneApp.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:converters="using:AllInOneApp.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converters:GraphDateTimeTimeZoneConverter x:Key="GraphDateTimeTimeZoneConverter"/>
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -26,8 +31,12 @@
                             <ColumnDefinition Width="400"/>
                             <ColumnDefinition Width="47"/>
                         </Grid.ColumnDefinitions>
-                        <RadioButton Content="{Binding Title}" Checked="UpdateTask"/>
-                        <!--<TextBlock Text="{Binding DueDateTime}"/>-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <RadioButton Content="{Binding Title}" Checked="UpdateTask" Grid.Row="0"/>
+                        <TextBlock Text="{Binding DueDateTime, Converter={StaticResource GraphDateTimeTimeZoneConverter}}" Grid.Row="1" FontSize="11" Margin="28,-8,0,0"/>
                         <SymbolIcon x:Name="taskPriority" Symbol="{Binding TaskPriority}" Tapped="PinTask" Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>

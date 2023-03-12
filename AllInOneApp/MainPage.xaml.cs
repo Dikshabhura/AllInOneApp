@@ -21,6 +21,7 @@ using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Abstractions;
 using System.Threading;
 using AllInOneApp.Views;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,6 +36,8 @@ namespace AllInOneApp
         //Set the scope for API call to user.read
         private string[] scopes = new string[] { "user.read" };
         public static GraphServiceClient graphClient;
+        public static User user;
+        public static BitmapImage userPicture = new BitmapImage();
 
         // Below are the clientId (Application Id) of your app registration and the tenant information.
         // You have to replace:
@@ -61,7 +64,7 @@ namespace AllInOneApp
         /// <summary>
         /// Call AcquireTokenAsync - to acquire a token requiring user to sign in
         /// </summary>
-        private async void Authenticate()//CallGraphButton_Click(object sender, RoutedEventArgs e)
+        private async void Authenticate()//(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -69,14 +72,24 @@ namespace AllInOneApp
                 graphClient = await SignInAndInitializeGraphServiceClient(scopes);
 
                 // Call the /me endpoint of Graph
-                User graphUser = await graphClient.Me.GetAsync();
+                user = await graphClient.Me.GetAsync();
+                var requPicture = await graphClient.Me.Photo.Content.GetAsync();
+
+                using (var memStream = new MemoryStream())
+                {
+                    await requPicture.CopyToAsync(memStream);
+                    memStream.Position = 0;
+
+                    userPicture.SetSource(memStream.AsRandomAccessStream());
+                }
+
 
                 // Go back to the UI thread to make changes to the UI
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    ResultText.Text = "Display Name: " + graphUser.DisplayName + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
+                    /*ResultText.Text = "Display Name: " + graphUser.DisplayName + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
                                       + "\nGiven Name: " + graphUser.GivenName + "\nid: " + graphUser.Id
-                                      + "\nUser Principal Name: " + graphUser.UserPrincipalName;
+                                      + "\nUser Principal Name: " + graphUser.UserPrincipalName;*/
                     DisplayBasicTokenInfo(authResult);
                     this.SignOutButton.Visibility = Visibility.Visible;
                 });
@@ -99,18 +112,19 @@ namespace AllInOneApp
         /// </summary>
         private void DisplayBasicTokenInfo(AuthenticationResult authResult)
         {
-            TokenInfoText.Text = "";
-            if (authResult != null)
-            {
-                TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
-                TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
-            }
+            //TokenInfoText.Text = "";
+            //if (authResult != null)
+            //{
+            //    TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
+            //    TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
+            //}
         }
         /// <summary>
         /// Displays a message in the ResultText. Can be called from any thread.
         /// </summary>
         private async Task DisplayMessageAsync(string message)
         {
+            ResultText.Visibility = Visibility.Visible;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -182,14 +196,14 @@ namespace AllInOneApp
                 await PublicClientApp.RemoveAsync(firstAccount).ConfigureAwait(false);
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    ResultText.Text = "User has signed out";
+                    //ResultText.Text = "User has signed out";
                     //this.CallGraphButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;
                 });
             }
             catch (MsalException ex)
             {
-                ResultText.Text = $"Error signing out user: {ex.Message}";
+                //ResultText.Text = $"Error signing out user: {ex.Message}";
             }
         }
     }

@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -28,6 +29,12 @@ namespace AllInOneApp
         public Navigation()
         {
             this.InitializeComponent();
+            this.userName.Text = MainPage.user.DisplayName;
+            this.userProfile.ProfilePicture = MainPage.userPicture;
+
+            var view = Assembly.GetExecutingAssembly().GetType($"AllInOneApp.Views.CommonPage");
+            ContentFrame.Navigate(view, null, new EntranceNavigationTransitionInfo());
+            //NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems[0];
         }
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)

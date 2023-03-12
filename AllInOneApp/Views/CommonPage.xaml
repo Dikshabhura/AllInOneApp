@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="AllInOneApp.Views.TeamsView"
+    x:Class="AllInOneApp.Views.CommonPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AllInOneApp.Views"
@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <TextBlock Text="Please select from left navigation."/>
     </Grid>
 </Page>

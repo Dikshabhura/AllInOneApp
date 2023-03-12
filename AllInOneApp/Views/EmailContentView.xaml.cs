@@ -1,9 +1,11 @@
 ﻿using AllInOneApp.Models;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Tavis.UriTemplates;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -35,21 +37,29 @@ namespace AllInOneApp.Views
 
             var parameters = (MailDetails)e.Parameter;
 
-            // parameters.Name
-            // parameters.Text
-            // ...
-
-            // Create run and set text
-            Run run = new Run();
-            run.Text = parameters.body;
+            string[] strings = parameters.body.Split('\\');
 
 
-            Paragraph paragraph = new Paragraph();
-            paragraph.Inlines.Add(run);
+            string toRecipients = string.Empty;
+            foreach(PersonDetail pd in parameters.toRecipients)
+            {
+                toRecipients = string.IsNullOrEmpty(toRecipients) ? pd.Address : toRecipients + "; " + pd.Address;
+            }
+
+            string ccRecipients = string.Empty;
+            foreach (PersonDetail pd in parameters.ccRecipients)
+            {
+                ccRecipients = string.IsNullOrEmpty(ccRecipients) ? pd.Address : ccRecipients + "; " + pd.Address;
+            }
+
+            this.subject.Text= parameters.subject;
             this.from.Text = parameters.from;
-            this.mailBody.Blocks.Add(paragraph);
-            this.mailBody.html
-
+            this.to.Text = "To: " + toRecipients;
+            this.cc.Text = string.IsNullOrEmpty(ccRecipients)? "":"cc: " + ccRecipients;
+            
+            //this.mailBody.Blocks.Add(paragraph);
+            this.mailBody.Text = strings[0];
+            
         }
     }
 }

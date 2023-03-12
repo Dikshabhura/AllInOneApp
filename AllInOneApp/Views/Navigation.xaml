@@ -8,12 +8,32 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <NavigationView x:Name="NavigationViewControl" ItemInvoked="NavigationViewControl_ItemInvoked" >
+    <Page.Resources>
+        <Flyout  x:Key="ProfileFlyout" Placement="Right" >
+            <Button Content="Sign out" Height="100" Width="100"/>
+        </Flyout>
+    </Page.Resources>
+
+    <StackPanel>
+        <NavigationView x:Name="NavigationViewControl" 
+                        ItemInvoked="NavigationViewControl_ItemInvoked" 
+                        SelectedItem="ToDoListView"
+                        PaneDisplayMode="LeftCompact">
+            <NavigationView.Header>
+                <Button HorizontalAlignment="Right" Flyout="{StaticResource ProfileFlyout}"  Margin="0,0,50,0" Background="Transparent">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <PersonPicture x:Name="userProfile" Width="50" Height="50" Grid.Column="0" />
+                        <TextBlock x:Name="userName" Grid.Column="1" Margin="5,15,0,0"/>
+                    </Grid>
+                </Button>
+            </NavigationView.Header>
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="To Do" Tag="ToDoListView" x:Name="ToDo" Icon="List"/>
                 <NavigationViewItem Content="Email" Tag ="EmailView" x:Name="Email" Icon="Mail"/>
-                <NavigationViewItem Content="Teams" Tag="TeamsView" x:Name="Teams" Icon="People"/>
                 <NavigationViewItem Content="Events" Tag="EventsView"  x:Name="Events" Icon="Calendar"/>
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame" NavigationFailed="ContentFrame_NavigationFailed"/>
@@ -28,10 +48,10 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="Left"/>
+                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="LeftCompact"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </StackPanel>
 </Page>

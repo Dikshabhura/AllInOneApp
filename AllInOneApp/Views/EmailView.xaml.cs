@@ -46,6 +46,7 @@ namespace AllInOneApp.Views
                 var result = await gc.Me.Messages.GetAsync((requestConfiguration) =>
                 {
                     requestConfiguration.QueryParameters.Filter = "importance eq 'high'";
+                    requestConfiguration.Headers.Add("Prefer", "outlook.body-content-type='text'");
                 });
 
                 if(result == null || result.Value.Count > 0)
@@ -53,6 +54,28 @@ namespace AllInOneApp.Views
                     for(int i = 0; i < result.Value.Count; i++)
                     {
                         var currValue = result.Value[i];
+
+                        List<PersonDetail> toRecipients = new List<PersonDetail>();
+
+                        foreach(var curruser in currValue.ToRecipients)
+                        {
+                            toRecipients.Add(new PersonDetail
+                            {
+                                Name = curruser.EmailAddress.Name,
+                                Address = curruser.EmailAddress.Address,
+                            });
+                        }
+
+                        List<PersonDetail> ccRecipients = new List<PersonDetail>();
+
+                        foreach (var curruser in currValue.CcRecipients)
+                        {
+                            toRecipients.Add(new PersonDetail
+                            {
+                                Name = curruser.EmailAddress.Name,
+                                Address = curruser.EmailAddress.Address,
+                            });
+                        }
 
                         myEmails.Add(new MailDetails
                         {
@@ -62,9 +85,9 @@ namespace AllInOneApp.Views
                             isRead=currValue.IsRead.Value,
                             from=currValue.From.EmailAddress.Address,
                             fromDisplayName = currValue.From.EmailAddress.Name,
-                            subjectColor = currValue.IsRead.Value ? Color.Black : Color.Blue
-                            //toRecipients=currValue.ToRecipients
-                            //ccRecipients=currValue.CcRecipients
+                            subjectColor = currValue.IsRead.Value ? Color.Black : Color.Blue,
+                            toRecipients= toRecipients,
+                            ccRecipients= ccRecipients,
                         });
                     }
                     

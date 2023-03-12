@@ -15,4 +15,16 @@ namespace AllInOneApp.Models
         public string Attendees { get; set; }
         public string Organizer { get; set; }
     }
+
+    public class EmailAddress
+    {
+        public string Name { get; set; }
+        public string Address { get; set; }
+    }
+
+    public class Attendee
+    {
+        public EmailAddress EmailAddress { get; set; }
+        public Microsoft.Graph.Models.AttendeeType Type { get; set; }
+    }
 }

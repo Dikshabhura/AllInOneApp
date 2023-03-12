@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Graph.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace AllInOneApp.Models
     {
         public string Title { get; set; }  
         public string Id { get; set; }
-        public string DueDateTime { get; set; }
+        public DateTimeTimeZone DueDateTime { get; set; }
         public Microsoft.Graph.Models.Importance? Importance { get; set; }
         public Symbol TaskPriority{ get; set; }
     }

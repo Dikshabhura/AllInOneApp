@@ -13,7 +13,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Width="300" BorderThickness="2" Orientation="Vertical" Grid.Column="0" >
+        <StackPanel BorderThickness="2" Orientation="Vertical" Grid.Column="0" Margin="0,0,263,0" >
             <ListView ItemsSource="{x:Bind myEmails}" SelectionChanged="ListView_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -31,10 +31,10 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                
+
             </ListView>
         </StackPanel>
-        <StackPanel Grid.Column="1" >
+        <StackPanel Grid.ColumnSpan="2" Margin="389,0,0,0" >
             <Frame x:Name="EmailContent" />
         </StackPanel>
     </Grid>

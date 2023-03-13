@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Width="550" HorizontalAlignment="Left">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -22,10 +22,7 @@
         <TextBlock x:Name="from" Grid.Row="1"/>
         <TextBlock x:Name="to" Grid.Row="2"/>
         <TextBlock x:Name="cc" Grid.Row="3"/>
-        <TextBlock x:Name="mailBody" Grid.Row="4"/>
-        <!--<RichTextBlock x:Name="mailBody" Grid.Row="4"/>-->
-
-
-
+        <NavigationViewItemSeparator Grid.Row="4" Margin="-20,0,0,0" FontWeight="Bold"></NavigationViewItemSeparator>
+        <TextBlock x:Name="mailBody" Grid.Row="5"/>
     </Grid>
 </Page>

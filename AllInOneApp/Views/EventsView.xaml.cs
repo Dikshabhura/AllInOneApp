@@ -61,8 +61,8 @@ namespace AllInOneApp.Views
                         {
                             Id = currValue.Id,
                             Subject = currValue.Subject,
-                            Starttime = currValue.Start.DateTime,
-                            Endtime = currValue.End.DateTime,
+                            Starttime = currValue.Start,
+                            Endtime = currValue.End,
                             //Attendees = currValue.Attendees.ToList(),
                             Organizer = "By: "+currValue.Organizer.EmailAddress.Name,
 

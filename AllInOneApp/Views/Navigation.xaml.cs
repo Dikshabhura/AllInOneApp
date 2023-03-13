@@ -29,12 +29,23 @@ namespace AllInOneApp
         public Navigation()
         {
             this.InitializeComponent();
-            this.userName.Text = MainPage.user.DisplayName;
-            this.userProfile.ProfilePicture = MainPage.userPicture;
+            this.userDisplayName.Text = MainPage.user.DisplayName;
+            this.userEmailAddress.Text = MainPage.user.UserPrincipalName;
 
-            var view = Assembly.GetExecutingAssembly().GetType($"AllInOneApp.Views.CommonPage");
+            if (MainPage.isPictureExist)
+            {
+                this.userProfile.ProfilePicture = MainPage.userPicture;
+                this.userDetailProfile.ProfilePicture = MainPage.userPicture;
+            }
+            else
+            {
+                this.userProfile.DisplayName = MainPage.user.DisplayName;
+                this.userDetailProfile.DisplayName = MainPage.user.DisplayName;
+            }
+
+            var view = Assembly.GetExecutingAssembly().GetType($"AllInOneApp.Views.ToDoListView");
             ContentFrame.Navigate(view, null, new EntranceNavigationTransitionInfo());
-            //NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems[0];
+            NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems[0];
         }
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -63,6 +74,19 @@ namespace AllInOneApp
         private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
 
+        }
+
+        private void SignOut(object sender, RoutedEventArgs e)
+        {
+            MainPage mainPage = new MainPage();
+            mainPage.SignOutButton_Click(sender, e);
+
+            this.Frame.Navigate(typeof(MainPage));
+        }
+
+        private void userProfile_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
     }
 }

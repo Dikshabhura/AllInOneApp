@@ -5,16 +5,22 @@
     xmlns:local="using:AllInOneApp.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:AllInOneApp.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converters:EventDateTimeConverter x:Key="EventDateTimeConverter"/>
+    </Page.Resources>
+
     <Grid>
         
-        <ListView ItemsSource="{x:Bind myEvents}" >
+        <ListView ItemsSource="{x:Bind myEvents}" Height="650">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -24,15 +30,17 @@
                             <ColumnDefinition Width="47"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="subject" Text="{Binding Subject}" Grid.Row="0" FontWeight="Bold"/>
-                        <TextBlock x:Name="organizer" Text="{Binding Organizer}" Grid.Row="1"/>
+                        <TextBlock x:Name="organizer" Text="{Binding Organizer}" Grid.Row="1" FontSize="11"/>
+                        <TextBlock Name="StartTime"  Text="{Binding Starttime, Converter={StaticResource EventDateTimeConverter}}" Grid.Row="2" FontSize="11"/>
+                        <TextBlock Name="EndTime" Text="{Binding Endtime, Converter={StaticResource EventDateTimeConverter}}" Grid.Row="3" FontSize="11"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button x:Name="btnAddNewEvent" Content="Add New Event" >
-            <Button.Flyout >
-                <Flyout >
-                    <Grid Height="500">
+        <Button x:Name="btnAddNewEvent" Content="Add New Event" VerticalAlignment="Bottom">
+            <Button.Flyout>
+                <Flyout>
+                    <Grid Height="400">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>

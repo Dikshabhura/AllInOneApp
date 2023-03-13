@@ -37,6 +37,8 @@ namespace AllInOneApp.Views
             gc = MainPage.graphClient;
 
             GetMyImportantEmail();
+
+            this.myImpEmails.SelectedIndex = 0;
         }
 
         private async void GetMyImportantEmail()

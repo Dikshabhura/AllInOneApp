@@ -43,7 +43,7 @@ namespace AllInOneApp.Views
             string toRecipients = string.Empty;
             foreach(PersonDetail pd in parameters.toRecipients)
             {
-                toRecipients = string.IsNullOrEmpty(toRecipients) ? pd.Address : toRecipients + "; " + pd.Address;
+                toRecipients = string.IsNullOrEmpty(toRecipients) ? pd.Address : toRecipients + ";\n      " + pd.Address;
             }
 
             string ccRecipients = string.Empty;
@@ -53,7 +53,7 @@ namespace AllInOneApp.Views
             }
 
             this.subject.Text= parameters.subject;
-            this.from.Text = parameters.from;
+            this.from.Text = "From: "+parameters.from;
             this.to.Text = "To: " + toRecipients;
             this.cc.Text = string.IsNullOrEmpty(ccRecipients)? "":"cc: " + ccRecipients;
             

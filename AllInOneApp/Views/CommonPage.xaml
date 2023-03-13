@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Text="Please select from left navigation."/>
+        <TextBlock Text="Please select from left navigation." FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Page>

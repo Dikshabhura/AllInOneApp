@@ -38,11 +38,11 @@ namespace AllInOneApp
         public static GraphServiceClient graphClient;
         public static User user;
         public static BitmapImage userPicture = new BitmapImage();
+        public static bool isPictureExist = false;
 
         // Below are the clientId (Application Id) of your app registration and the tenant information.
         // You have to replace:
         // - the content of ClientID with the Application Id for your app registration
-        //private const string ClientId = "bf5566df-d112-4392-bbec-235fdb022d46";
         private const string ClientId = "d6c9fb35-bfd3-4a4b-a7a8-3f565a6c9839";
 
 
@@ -58,43 +58,50 @@ namespace AllInOneApp
         public MainPage()
         {
             this.InitializeComponent();
-            Authenticate();
         }
 
         /// <summary>
         /// Call AcquireTokenAsync - to acquire a token requiring user to sign in
         /// </summary>
-        private async void Authenticate()//(object sender, RoutedEventArgs e)
+        private async void Authenticate(object sender, RoutedEventArgs e)
         {
             try
             {
+                LoadingIndicator.IsActive = true;
                 // Sign in user using MSAL and obtain an access token for Microsoft Graph
                 graphClient = await SignInAndInitializeGraphServiceClient(scopes);
 
                 // Call the /me endpoint of Graph
                 user = await graphClient.Me.GetAsync();
-                var requPicture = await graphClient.Me.Photo.Content.GetAsync();
 
-                using (var memStream = new MemoryStream())
+                //Get user profile image.
+                try
                 {
-                    await requPicture.CopyToAsync(memStream);
-                    memStream.Position = 0;
+                    var requPicture = await graphClient.Me.Photo.Content.GetAsync();
 
-                    userPicture.SetSource(memStream.AsRandomAccessStream());
+                    using (var memStream = new MemoryStream())
+                    {
+                        isPictureExist = true;
+                        await requPicture.CopyToAsync(memStream);
+                        memStream.Position = 0;
+
+                        userPicture.SetSource(memStream.AsRandomAccessStream());
+                    }
+                }
+                catch(Exception ex)
+                {
+                    isPictureExist = false;
+                    Console.WriteLine(ex.ToString());
                 }
 
 
                 // Go back to the UI thread to make changes to the UI
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    /*ResultText.Text = "Display Name: " + graphUser.DisplayName + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
-                                      + "\nGiven Name: " + graphUser.GivenName + "\nid: " + graphUser.Id
-                                      + "\nUser Principal Name: " + graphUser.UserPrincipalName;*/
                     DisplayBasicTokenInfo(authResult);
-                    this.SignOutButton.Visibility = Visibility.Visible;
                 });
 
-
+                LoadingIndicator.IsActive = false;
                 this.Frame.Navigate(typeof(Navigation));
             }
             catch (MsalException msalEx)
@@ -186,7 +193,7 @@ namespace AllInOneApp
         /// <summary>
         /// Sign out the current user
         /// </summary>
-        private async void SignOutButton_Click(object sender, RoutedEventArgs e)
+        public async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
             IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
@@ -194,12 +201,13 @@ namespace AllInOneApp
             try
             {
                 await PublicClientApp.RemoveAsync(firstAccount).ConfigureAwait(false);
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    //ResultText.Text = "User has signed out";
-                    //this.CallGraphButton.Visibility = Visibility.Visible;
-                    this.SignOutButton.Visibility = Visibility.Collapsed;
-                });
+                //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                //{
+                //ResultText.Text = "User has signed out";
+                //this.CallGraphButton.Visibility = Visibility.Visible;
+                //this.SignOutButton.Visibility = Visibility.Collapsed;
+                //});
+                //this.Frame.Navigate(typeof(MainPage));
             }
             catch (MsalException ex)
             {

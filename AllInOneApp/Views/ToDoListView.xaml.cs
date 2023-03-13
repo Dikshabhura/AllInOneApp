@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Task = AllInOneApp.Models.Task;
 using TaskStatus = Microsoft.Graph.Models.TaskStatus;
 using AllInOneApp.Helper;
+using Windows.UI.Notifications;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -44,9 +45,9 @@ namespace AllInOneApp.Views
 
             // Get the Graph client from MainPage;
             gc = MainPage.graphClient;
-            //GetToDoTaskListId();
+            
             GetMyTasks();
-            //AddTask();
+            
         }
 
         private async Task<string> GetToDoTaskListId()
@@ -121,7 +122,7 @@ namespace AllInOneApp.Views
                     DueDateTime = new DateTimeTimeZone
                     {
                         DateTime = dateTimeConversion.DateTimeConverter(taskDueDate.Date.Value),
-                        TimeZone = "Eastern Standard Time"
+                        TimeZone = "UTC"
                     },
                 };
 
@@ -135,6 +136,9 @@ namespace AllInOneApp.Views
                     DueDateTime = result.DueDateTime,
                     TaskPriority = result.Importance == Importance.High ? Symbol.Pin : Symbol.UnPin,
                 });
+
+                AddTaskTitle.Text = "";
+                taskDueDate.Date = null;
 
                 Console.WriteLine(result);
             }

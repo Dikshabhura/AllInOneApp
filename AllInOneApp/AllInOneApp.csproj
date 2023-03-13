@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\EventDateTimeConverter.cs" />
     <Compile Include="Converters\GraphDateTimeTimeZoneConverter.cs" />
     <Compile Include="Helper\DateTimeConversion.cs" />
     <Compile Include="Helper\TokenProvider.cs" />

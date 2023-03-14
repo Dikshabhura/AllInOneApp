@@ -9,10 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        
-        
+
+
         <StackPanel Background="Azure">
-            <TextBlock Text="Please Sign in." HorizontalAlignment="Center" Margin="0,100,0,0" FontSize="20" FontWeight="SemiBold"/>
             <TextBlock Text="Please Sign in." HorizontalAlignment="Center" Margin="0,100,0,0" FontSize="20" FontWeight="SemiBold"/>
             <StackPanel VerticalAlignment="Center">
                 <Button x:Name="CallGraphButton" Content="Sign In" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5" Click="Authenticate" Margin="5" FontFamily="Segoe Ui"/>

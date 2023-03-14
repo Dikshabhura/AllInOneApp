@@ -15,6 +15,7 @@ namespace AllInOneApp.Models
         public DateTimeTimeZone DueDateTime { get; set; }
         public Microsoft.Graph.Models.Importance? Importance { get; set; }
         public Symbol TaskPriority{ get; set; }
+        public Microsoft.Graph.Models.TaskStatus Status { get; set; }
     }
 
     //public enum TaskStatus

@@ -32,20 +32,17 @@ namespace AllInOneApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-
-        //Set the scope for API call to user.read
-        private string[] scopes = new string[] { "user.read" };
-        public static GraphServiceClient graphClient;
-        public static User user;
-        public static BitmapImage userPicture = new BitmapImage();
-        public static bool isPictureExist = false;
-
         // Below are the clientId (Application Id) of your app registration and the tenant information.
         // You have to replace:
         // - the content of ClientID with the Application Id for your app registration
         private const string ClientId = "d6c9fb35-bfd3-4a4b-a7a8-3f565a6c9839";
 
-
+        //Set the scope for API call to user.read
+        private string[] scopes = new string[] { "user.read", "Tasks.ReadWrite", "Calendars.ReadWrite", "Mail.ReadWrite" };
+        public static GraphServiceClient graphClient;
+        public static User user;
+        public static BitmapImage userPicture = new BitmapImage();
+        public static bool isPictureExist = false;
         private const string Tenant = "common"; // Alternatively "[Enter your tenant, as obtained from the Azure portal, e.g. kko365.onmicrosoft.com]"
         private const string Authority = "https://login.microsoftonline.com/" + Tenant;
 

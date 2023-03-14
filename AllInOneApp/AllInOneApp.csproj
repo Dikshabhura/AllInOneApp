@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Converters\EventDateTimeConverter.cs" />
     <Compile Include="Converters\GraphDateTimeTimeZoneConverter.cs" />
+    <Compile Include="Converters\TaskStatusConverter.cs" />
     <Compile Include="Helper\DateTimeConversion.cs" />
     <Compile Include="Helper\TokenProvider.cs" />
     <Compile Include="MainPage.xaml.cs">

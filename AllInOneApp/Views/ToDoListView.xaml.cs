@@ -37,7 +37,8 @@ namespace AllInOneApp.Views
         private GraphServiceClient gc;
         private string listId = string.Empty;
         //private string listId = "AAMkADAwYzExZjBjLTAxY2QtNDc5OC1iNWI3LTAxZTg1MGNmMGY2ZgAuAAAAAAAVpdoKmHXYQr8TZqNt7h4QAQAHs8eE9g4dT4ytMjsDuRdFAAAAAAESAAA=";
-        public ObservableCollection<Task> myTasks = new ObservableCollection<Task>();
+        public ObservableCollection<Task> myPendingTasks = new ObservableCollection<Task>();
+        public ObservableCollection<Task> myCompletedTasks = new ObservableCollection<Task>();
         Symbol taskPriority;
         public ToDoListView()
         {
@@ -59,8 +60,6 @@ namespace AllInOneApp.Views
                 var todoList = await gc.Me.Todo.Lists.GetAsync();
 
                 taskListId = todoList.Value.First(l => l.DisplayName == "Tasks").Id;
-
-                //return taskListId;
             }
             catch(Exception ex)
             {
@@ -84,12 +83,24 @@ namespace AllInOneApp.Views
                         var currTask = mytodolist.Value[index];
                         if (currTask.Status != TaskStatus.Completed)
                         {
-                            myTasks.Add(new Task
+                            myPendingTasks.Add(new Task
                             {
                                 Title = currTask.Title,
                                 Id = currTask.Id,
                                 Importance = currTask.Importance,
                                 DueDateTime = currTask.DueDateTime,
+                                TaskPriority = currTask.Importance == Importance.High ? Symbol.Pin : Symbol.UnPin,
+                            });
+                        }
+                        else
+                        {
+                            myCompletedTasks.Add(new Task
+                            {
+                                Title = currTask.Title,
+                                Id = currTask.Id,
+                                Importance = currTask.Importance,
+                                DueDateTime = currTask.DueDateTime,
+                                Status = TaskStatus.Completed,
                                 TaskPriority = currTask.Importance == Importance.High ? Symbol.Pin : Symbol.UnPin,
                             });
                         }
@@ -128,7 +139,7 @@ namespace AllInOneApp.Views
 
                 var result = await gc.Me.Todo.Lists[listId].Tasks.PostAsync(reqBody);
 
-                myTasks.Add(new Task
+                myPendingTasks.Add(new Task
                 {
                     Title = result.Title,
                     Id = result.Id,
@@ -164,7 +175,17 @@ namespace AllInOneApp.Views
 
                 if (result.Status == TaskStatus.Completed)
                 {
-                    myTasks.Remove(selectedTask);
+                    myPendingTasks.Remove(selectedTask);
+
+                    myCompletedTasks.Add(new Task
+                    {
+                        Title = selectedTask.Title,
+                        Id = selectedTask.Id,
+                        Importance = selectedTask.Importance,
+                        DueDateTime = selectedTask.DueDateTime,
+                        Status = TaskStatus.Completed,
+                        TaskPriority = selectedTask.Importance == Importance.High ? Symbol.Pin : Symbol.UnPin,
+                    });
                 }
             }
             catch(Exception ex)
@@ -197,5 +218,23 @@ namespace AllInOneApp.Views
             }
             catch(Exception ex) { Console.WriteLine(ex.Message); }
         }
+
+        private void SwitchTasks(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (toggleSwitch.IsOn == true)
+                {
+                    this.MyTasks.ItemsSource = myCompletedTasks;
+                }
+                else
+                {
+                    this.MyTasks.ItemsSource = myPendingTasks;
+                }
+            }
+            
+        } 
+        
     }
 }
